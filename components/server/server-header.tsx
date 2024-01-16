@@ -34,7 +34,7 @@ export const ServerHeader = ({ role, server }: ServerHeaderProps) => {
         )}
 
         {isAdmin && (
-          <DropdownMenuItem className="text-yellow-400 p-2 text-sm cursor-pointer">
+          <DropdownMenuItem className="text-yellow-400 p-2 text-sm cursor-pointer" onClick={() => onOpen("editServer", { server })}>
             Server Settings <Settings className="w-5 h-5 ml-auto" />
           </DropdownMenuItem>
         )}
