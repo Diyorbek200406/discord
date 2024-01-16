@@ -42,13 +42,10 @@ export const MembersModal = () => {
   const onRoleChange = async (memberId: string, role: MemberRole) => {
     try {
       setLoadingId(memberId);
-      const url = qs.stringifyUrl({
-        url: `/api/members/${memberId}`,
-        query: { serverId: server?.id, memberId },
-      });
+
+      const url = qs.stringifyUrl({ url: `/api/members/${memberId}`, query: { serverId: server?.id } });
 
       const { data } = await axios.patch(url, { role });
-
       if (!data) throw new Error("Failed to update role");
 
       router.refresh();
@@ -59,6 +56,8 @@ export const MembersModal = () => {
       setLoadingId("");
     }
   };
+
+  const onKick = async (memberId: string) => {};
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
@@ -97,13 +96,13 @@ export const MembersModal = () => {
                             <DropdownMenuItem onClick={() => onRoleChange(member?.id, "GUEST")}>
                               <Shield className="w-5 h-5 mr-2" />
                               GUEST
-                              {member?.role === "GUEST" && <Check className="w-5 h-5 mr-2 ml-auto" />}
+                              {member?.role === "GUEST" && <Check className="w-5 h-5 ml-auto" />}
                             </DropdownMenuItem>
 
                             <DropdownMenuItem onClick={() => onRoleChange(member?.id, "MODERATOR")}>
                               <ShieldCheck className="w-5 h-5 mr-2" />
                               MODERATOR
-                              {member?.role === "MODERATOR" && <Check className="w-5 h-5 mr-2 ml-auto" />}
+                              {member?.role === "MODERATOR" && <Check className="w-5 h-5 ml-auto" />}
                             </DropdownMenuItem>
                           </DropdownMenuSubContent>
                         </DropdownMenuPortal>
