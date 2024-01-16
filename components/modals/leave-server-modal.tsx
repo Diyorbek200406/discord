@@ -9,20 +9,21 @@ import { useModalStore } from "@/hooks/use-modal-store";
 import { Button } from "@/components/ui/button";
 
 export const LeaveServerModal = () => {
-  const router = useRouter();
   const { isOpen, onClose, type, data } = useModalStore();
-  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const isModalOpen = isOpen && type === "leaveServer";
   const { server } = data;
 
-  const onLeave = async () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onClick = async () => {
     try {
       setIsLoading(true);
-      const { data } = await axios.patch(`/api/servers/${server?.id}/leave`);
+      await axios.patch(`/api/servers/${server?.id}/leave`);
       onClose();
-      router.refresh();
       router.push("/");
+      router.refresh();
     } catch (error) {
       console.log(error);
     } finally {
@@ -36,15 +37,15 @@ export const LeaveServerModal = () => {
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">Leave Server</DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            Are you sure you want to leave <span className="font-semibold text-indigo-500">{server?.name}</span> ?
+            Are you sure you want to leave <span className="font-semibold text-indigo-500">{server?.name}</span>?
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="bg-gray-100 p-4">
+        <DialogFooter className="bg-gray-100 px-6 py-4">
           <div className="flex items-center justify-between w-full">
-            <Button disabled={isLoading} onClick={onClose} variant={"ghost"}>
+            <Button disabled={isLoading} onClick={onClose} variant="ghost">
               Cancel
             </Button>
-            <Button disabled={isLoading} onClick={onLeave} variant={"primary"}>
+            <Button disabled={isLoading} variant="primary" onClick={onClick}>
               Confirm
             </Button>
           </div>
