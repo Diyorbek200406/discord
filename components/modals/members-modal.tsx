@@ -57,7 +57,21 @@ export const MembersModal = () => {
     }
   };
 
-  const onKick = async (memberId: string) => {};
+  const onKick = async (memberId: string) => {
+    try {
+      setLoadingId(memberId);
+
+      const url = qs.stringifyUrl({ url: `/api/members/${memberId}`, query: { serverId: server?.id } });
+      const { data } = await axios.delete(url);
+
+      router.refresh();
+      onOpen("members", { server: data });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingId("");
+    }
+  };
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
@@ -108,7 +122,7 @@ export const MembersModal = () => {
                         </DropdownMenuPortal>
                       </DropdownMenuSub>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onKick(member?.id)}>
                         <Gavel className="w-5 h-5 mr-2" />
                         Kick
                       </DropdownMenuItem>
