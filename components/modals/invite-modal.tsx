@@ -68,7 +68,7 @@ export const InviteModal = () => {
             </Button>
           </div>
 
-          <Button className="text-xs text-zinc-500 mt-4" variant={"link"} size={"sm"} disabled={isLoading} onClick={onNew}>
+          <Button className="text-xs text-white mt-4 w-full bg-indigo-700 hover:bg-indigo-800" variant={"outline"} disabled={isLoading} onClick={onNew}>
             Generate a new link <RefreshCw className="w-5 h-5 ml-2" />
           </Button>
         </div>
