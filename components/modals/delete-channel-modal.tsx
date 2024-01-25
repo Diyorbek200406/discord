@@ -1,13 +1,13 @@
 "use client";
 
 import axios from "axios";
+import qs from "query-string";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { useModalStore } from "@/hooks/use-modal-store";
-
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useModalStore } from "@/hooks/use-modal-store";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export const DeleteChannelModal = () => {
   const { isOpen, onClose, type, data } = useModalStore();
@@ -15,17 +15,19 @@ export const DeleteChannelModal = () => {
 
   const isModalOpen = isOpen && type === "deleteChannel";
 
-  const { server } = data;
+  const { server, channel } = data;
 
   const [isLoading, setIsLoading] = useState(false);
 
   const onClick = async () => {
     try {
       setIsLoading(true);
-      await axios.delete(`/api/servers/${server?.id}`);
+      const url = qs.stringifyUrl({ url: `/api/channels/${channel?.id}`, query: { serverId: server?.id } });
+      await axios.delete(url);
+
       onClose();
       router.refresh();
-      router.push("/");
+      router.push(`/servers/${server?.id}`);
     } catch (error) {
       console.log(error);
     } finally {
@@ -36,13 +38,18 @@ export const DeleteChannelModal = () => {
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
+        {/* The header of the modal shows what you are removing. */}
+
         <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="text-2xl text-center font-bold">Delete Server</DialogTitle>
+          <DialogTitle className="text-2xl text-center font-bold">Delete Channel</DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
             Are you sure you want to do this ? <br />
-            <span className="font-semibold text-indigo-500">{server?.name}</span> will be permanently deleted .
+            <span className="font-semibold text-indigo-500">#{channel?.name}</span> will be permanently deleted .
           </DialogDescription>
         </DialogHeader>
+
+        {/* The modal part has buttons to cancel and confirm its data. */}
+
         <DialogFooter className="bg-gray-100 px-6 py-4">
           <div className="flex items-center justify-between w-full">
             <Button disabled={isLoading} onClick={onClose} variant="ghost">
