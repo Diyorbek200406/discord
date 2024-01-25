@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { MemberRole } from "@prisma/client";
-// @ts-ignore
 import { currentProfile } from "@/lib/current-profile";
-// @ts-ignore
 import { db } from "@/lib/db";
 
 export async function DELETE(req: Request, { params }: { params: { channelId: string } }) {
@@ -32,7 +30,6 @@ export async function DELETE(req: Request, { params }: { params: { channelId: st
 export async function PATCH(req: Request, { params }: { params: { channelId: string } }) {
   try {
     const profile = await currentProfile();
-    // @ts-ignore
     const { name, type } = await req.json();
     console.log(name, type);
     const { searchParams } = new URL(req.url);
@@ -46,9 +43,21 @@ export async function PATCH(req: Request, { params }: { params: { channelId: str
     const server = await db.server.update({
       where: {
         id: serverId,
-        members: { some: { profileId: profile.id, role: { in: [MemberRole.ADMIN, MemberRole.MODERATOR] } } },
+        members: {
+          some: {
+            profileId: profile.id,
+            role: { in: [MemberRole.ADMIN, MemberRole.MODERATOR] },
+          },
+        },
       },
-      data: { channels: { delete: { id: params.channelId, name: { not: "general" } } } },
+      data: {
+        channels: {
+          update: {
+            where: { id: params.channelId, NOT: { name: "general" } },
+            data: { name, type },
+          },
+        },
+      },
     });
 
     return NextResponse.json(server);
