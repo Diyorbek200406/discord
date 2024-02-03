@@ -3,9 +3,9 @@
 import { MemberRole } from "@prisma/client";
 import { ChevronDown, LogOut, PlusCircle, Settings, Trash, UserPlus, Users } from "lucide-react";
 
-import { ServerWithMembersWithProfiles } from "@/types";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { useModalStore } from "@/hooks/use-modal-store";
+import { ServerWithMembersWithProfiles } from "@/types";
 
 interface ServerHeaderProps {
   role?: MemberRole;
@@ -21,7 +21,7 @@ export const ServerHeader = ({ role, server }: ServerHeaderProps) => {
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-none" asChild>
         <button className="w-full text-md font-semibold px-3 flex items-center h-12 border-neutral-200 dark:border-neutral-800 border-b-2 hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition">
-          <span>{server.name}</span>
+          <span>{server?.name}</span>
           <ChevronDown className="h-5 w-5 ml-auto" />
         </button>
       </DropdownMenuTrigger>
